@@ -101,9 +101,9 @@ const App = () => {
   // ну ретерн и ретерн, че бухтеть-то
   return (
       <div className="container">
-        <form>
+        <div>
           <input type="text" value={result} autoFocus={true} />
-        </form>
+        </div>
         <div className="keypad">
           {buttons.map((b) => <Button name={b} onClick={handleClick}/>)}
         </div>

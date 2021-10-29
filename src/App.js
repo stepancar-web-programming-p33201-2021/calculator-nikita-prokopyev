@@ -8,8 +8,7 @@ const manips = ['Clear', '←', '^', '/', '*', '-', '=', '+'];
 // Пожилая кнопка
 const Button = (props) => {
   if (manips.includes(props.name))
-    return (
-        <button key={props.name} className="highlight" name={props.name} onClick={props.onClick}>{props.name}</button>);
+    return (<button key={props.name} className="highlight" name={props.name} onClick={props.onClick}>{props.name}</button>);
   else
     return (<button key={props.name} name={props.name} onClick={props.onClick}>{props.name}</button>);
 }
@@ -30,13 +29,13 @@ const App = () => {
             document.getElementsByName('Clear')[0].click();
             break;
           case 'Enter' :
-            document.getElementsByName(event.key)[0].click();
+            document.getElementsByName('=')[0].click();
             break;
           case '=' :
             document.getElementsByName(event.key)[0].click();
             break;
           default :
-            break;
+            console.log('Error : unknown button ' + event.key);
         }
       }
     });
@@ -103,7 +102,7 @@ const App = () => {
   return (
       <div className="container">
         <form>
-          <input type="text" value={result} autoFocus={true}/>
+          <input type="text" value={result} autoFocus={true} />
         </form>
         <div className="keypad">
           {buttons.map((b) => <Button name={b} onClick={handleClick}/>)}
@@ -155,9 +154,6 @@ class node {
       this.left.parse();
       this.right.parse();
     }
-
-    if (!this.isSimple) console.log(this.left.expression, this.right.expression);
-    else console.log(this.expression);
     return this.evaluate();
   }
 
@@ -181,6 +177,7 @@ class node {
       case '-' :
         return this.left.evaluate() - this.right.evaluate();
         break;
+      default : console.log('Error : unknown operator');
     }
   }
 }

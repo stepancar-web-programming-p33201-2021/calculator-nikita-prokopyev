@@ -4,13 +4,13 @@ import './App.css';
 // какие-то константы, яхз
 const buttons = ['Clear', '←', '^', '/', '7', '8', '9', '*', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
 const manips = ['Clear', '←', '^', '/', '*', '-', '=', '+'];
-
+let tabs = 1;
 // Пожилая кнопка
 const Button = (props) => {
   if (manips.includes(props.name))
-    return (<button key={props.name} className="highlight" name={props.name} onClick={props.onClick}>{props.name}</button>);
+    return (<button key={props.name} className="highlight" name={props.name} onClick={props.onClick} tabIndex={tabs++}>{props.name}</button>);
   else
-    return (<button key={props.name} name={props.name} onClick={props.onClick}>{props.name}</button>);
+    return (<button key={props.name} name={props.name} onClick={props.onClick}  tabIndex={tabs++}>{props.name}</button>);
 }
 
 // приложение вот
@@ -28,12 +28,14 @@ const App = () => {
           case 'Escape' :
             document.getElementsByName('Clear')[0].click();
             break;
-          case 'Enter' :
-            document.getElementsByName('=')[0].click();
-            break;
+          // case 'Enter' :
+          //   document.getElementsByName('=')[0].click();
+          //   break;
           case '=' :
             document.getElementsByName(event.key)[0].click();
             break;
+          // case 'ArrowLeft' : document.activeElement.previousElementSibling.focus();break;
+          // case 'ArrowRight' : document.activeElement.nextElementSibling.focus();break;
           default :
             console.log('Error : unknown button ' + event.key);
         }
@@ -102,7 +104,7 @@ const App = () => {
   return (
       <div className="container">
         <div>
-          <input type="text" value={result} autoFocus={true} />
+          <input type="text" value={result} autoFocus={true} tabIndex="0"/>
         </div>
         <div className="keypad">
           {buttons.map((b) => <Button name={b} onClick={handleClick}/>)}

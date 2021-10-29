@@ -59,12 +59,17 @@ button {
 }
 
 input:focus,
-input:active,
-button:focus,
-button:active {
+input:active {
     outline: none;
 }
 
+button:focus,
+button:active,
+button:hover {
+    text-shadow: 0 0 10px #ffffff;
+    outline: 2px solid white;
+}
+
 .highlight {
-    background-color: #8c88ce;
+    background-color: #9893e8;
 }

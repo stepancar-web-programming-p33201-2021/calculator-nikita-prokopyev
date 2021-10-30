@@ -21,7 +21,8 @@ const Button = (props) => {
 const App = () => {
   const [result, setResult] = useState('0');
 
-  const validMiddleWare = (value) => value.match(/^[0-9./\-*+%^]+$/) && !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\./) && checkDots2(value);
+  const validMiddleWare = (value) => value.match(/^[0-9./\-*+%^]+$/) && !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\.|\.\+|\+\.|-\.|\.-|%\.|\.%|\^\.|\.\^|\*\.|\.\*|^\+|^\*|^%|^\^/) && checkDots2(value);
+  const validExp = /^0[0-9]+|\+0[0-9]+|-0[0-9]+|\*0[0-9]+|%0[0-9]+|\^0[0-9]+/;
 
   const ev = (event) => {
     const key = event.key;
@@ -35,27 +36,20 @@ const App = () => {
   const e = (value) => {
     if (value.charAt(value.length - 1) === '=') {
       value = value.slice(0, -1);
-      if (validMiddleWare(value) && !value.match(/^0[0-9]+/) && !value.match(/%$|\+$|-$|\^$|\.$|\*$/)) {
+      if (validMiddleWare(value) && !value.match(validExp) && !value.match(/%$|\+$|-$|\^$|\.$|\*$/)) {
         const v = new Node(value).parse();
-        setResult((v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER) ? 'Error' : v);
+        setResult((v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER) ? 'Error' : v.toString());
       }
     } else {
       if (validMiddleWare(value)) {
-        if (!value.match(/^0[0-9]+/)) {
+        if (!value.match(validExp)) {
           setResult(value);
-        } else {
+        } else if (value.match(/^0[0-9]+/) && !value.match(/\+0[0-9]+|-0[0-9]+|\*0[0-9]+|%0[0-9]+|\^0[0-9]+/)) {
           setResult(value.slice(1));
         }
       } else if (value === '') {
         setResult('0');
       }
-    }
-  }
-
-  const calc = () => {
-    if (result.charAt(result.length - 1).match(/^\d$/)) {
-      const v = new Node(result).parse();
-      setResult((v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER) ? 'Error' : v);
     }
   }
 
@@ -100,7 +94,8 @@ const App = () => {
             setResult('0');
           break;
         case '=' :
-          calc();
+          // calc();
+          e(result + '=');
           break;
         case '.' :
           if (result.charAt(result.length - 1).match(/^\d$/) && checkDots(result))
@@ -108,15 +103,17 @@ const App = () => {
           break;
         case '-' :
           if (result === '0') {
-            setResult('-');
+            // setResult('-');
+            e('-');
             break;
           }
         default :
-          if (result.charAt(result.length - 1).match(/^\d$/)) {
-            setResult(result + clickSymbol);
-          } else if (!result.charAt(result.length - 1).match(/^\.$/)) {
-            setResult(result.slice(0, -1) + clickSymbol);
-          }
+          // if (result.charAt(result.length - 1).match(/^\d$/)) {
+          //   setResult(result + clickSymbol);
+          // } else if (!result.charAt(result.length - 1).match(/^\.$/)) {
+          //   setResult(result.slice(0, -1) + clickSymbol);
+          // }
+          e(result + clickSymbol);
       }
     } else if (result === '0') {
       setResult(clickSymbol);

@@ -41,6 +41,7 @@ input[type="text"] {
     font-size: 25px;
     font-weight: 500;
     letter-spacing: 1px;
+    border-radius: 5px;
 }
 
 button[name="="] {
@@ -60,7 +61,8 @@ button {
 
 input:focus,
 input:active {
-    outline: none;
+    text-shadow: 0 0 10px #ffffff;
+    outline: 2px solid white;
 }
 
 button:focus,

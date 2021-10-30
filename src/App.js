@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import './App.css';
 import Node from "./Node";
 
-// какие-то константы, яхз
+// константы
 const buttons = ['clear', '←', '^', '%', '7', '8', '9', '*', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
 const manips = ['clear', '←', '^', '%', '*', '-', '=', '+'];
 let tabs = 1;
@@ -23,11 +23,21 @@ const App = () => {
 
   const validMiddleWare = (value) => value.match(/^[0-9./\-*+%^]+$/) && !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\./) && checkDots2(value);
 
+  const ev = (event) => {
+    const key = event.key;
+    if (key === 'Escape') {
+      handleClick('clear');
+    } else if (key === 'Enter') {
+      handleClick('=');
+    }
+  }
+
   const e = (value) => {
     if (value.charAt(value.length - 1) === '=') {
       value = value.slice(0, -1);
       if (validMiddleWare(value) && !value.match(/^0[0-9]+/) && !value.match(/%$|\+$|-$|\^$|\.$|\*$/)) {
-        setResult(new Node(value).parse().toString());
+        const v = new Node(value).parse();
+        setResult((v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER) ? 'Error' : v);
       }
     } else {
       if (validMiddleWare(value)) {
@@ -44,7 +54,8 @@ const App = () => {
 
   const calc = () => {
     if (result.charAt(result.length - 1).match(/^\d$/)) {
-      setResult(new Node(result).parse().toString());
+      const v = new Node(result).parse();
+      setResult((v > Number.MAX_SAFE_INTEGER || v < Number.MIN_SAFE_INTEGER) ? 'Error' : v);
     }
   }
 
@@ -76,9 +87,7 @@ const App = () => {
   }
 
 // ручка вот, можешь что-нить написать
-  const handleClick = (e) => {
-    const clickSymbol = e.target.name;
-
+  const handleClick = (clickSymbol) => {
     if (!clickSymbol.match(/^[0-9]$/)) {
       switch (clickSymbol) {
         case 'clear' :
@@ -120,10 +129,10 @@ const App = () => {
   return (
       <div className="container">
         <div>
-          <input id="input" type="text" value={result} autoFocus={true} tabIndex="0" onChange={(event) => e(event.target.value)} />
+          <input id="input" type="text" value={result} autoFocus={true} tabIndex="0" onChange={(event) => e(event.target.value)}  onKeyUp={ev}/>
         </div>
         <div className="keypad">
-          {buttons.map((b) => <Button name={b} onClick={handleClick}/>)}
+          {buttons.map((b) => <Button name={b} onClick={(e) => handleClick(e.target.name)}/>)}
         </div>
       </div>
   );

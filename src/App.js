@@ -24,7 +24,7 @@ const App = () => {
   const validMiddleWare = (value) => value.match(/^[0-9./\-*+%^]+$/) && !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\.|\.\+|\+\.|-\.|\.-|%\.|\.%|\^\.|\.\^|\*\.|\.\*|^\+|^\*|^%|^\^/) && checkDots2(value);
   const validExp = /^0[0-9]+|\+0[0-9]+|-0[0-9]+|\*0[0-9]+|%0[0-9]+|\^0[0-9]+/;
 
-  const ev = (event) => {
+  const keyboardEventHandler = (event) => {
     const key = event.key;
     if (key === 'Escape') {
       handleClick('clear');
@@ -33,7 +33,7 @@ const App = () => {
     }
   }
 
-  const e = (value) => {
+  const evaluate = (value) => {
     if (value.charAt(value.length - 1) === '=') {
       value = value.slice(0, -1);
       if (validMiddleWare(value) && !value.match(validExp) && !value.match(/%$|\+$|-$|\^$|\.$|\*$/)) {
@@ -95,7 +95,7 @@ const App = () => {
           break;
         case '=' :
           // calc();
-          e(result + '=');
+          evaluate(result + '=');
           break;
         case '.' :
           if (result.charAt(result.length - 1).match(/^\d$/) && checkDots(result))
@@ -104,7 +104,7 @@ const App = () => {
         case '-' :
           if (result === '0') {
             // setResult('-');
-            e('-');
+            evaluate('-');
             break;
           }
         default :
@@ -113,7 +113,7 @@ const App = () => {
           // } else if (!result.charAt(result.length - 1).match(/^\.$/)) {
           //   setResult(result.slice(0, -1) + clickSymbol);
           // }
-          e(result + clickSymbol);
+          evaluate(result + clickSymbol);
       }
     } else if (result === '0') {
       setResult(clickSymbol);
@@ -126,7 +126,7 @@ const App = () => {
   return (
       <div className="container">
         <div>
-          <input id="input" type="text" value={result} autoFocus={true} tabIndex="0" onChange={(event) => e(event.target.value)}  onKeyUp={ev}/>
+          <input id="input" type="text" value={result} autoFocus={true} tabIndex="0" onChange={(event) => evaluate(event.target.value)}  onKeyUp={keyboardEventHandler}/>
         </div>
         <div className="keypad">
           {buttons.map((b) => <Button name={b} onClick={(e) => handleClick(e.target.name)}/>)}

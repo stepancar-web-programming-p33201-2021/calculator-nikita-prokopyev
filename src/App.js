@@ -10,10 +10,22 @@ let tabs = 1;
 // Пожилая кнопка
 const Button = (props) => {
   if (manips.includes(props.name)) {
-    return (<button key={props.name} className="highlight" name={props.name} onClick={props.onClick}
-                    tabIndex={tabs++}>{props.name}</button>);
+    return (
+        <button key={props.name}
+                className="highlight"
+                name={props.name}
+                onClick={props.onClick}
+                tabIndex={tabs++}>{props.name}
+        </button>
+    );
   } else {
-    return (<button key={props.name} name={props.name} onClick={props.onClick} tabIndex={tabs++}>{props.name}</button>);
+    return (
+        <button key={props.name}
+                name={props.name}
+                onClick={props.onClick}
+                tabIndex={tabs++}>{props.name}
+        </button>
+    );
   }
 }
 
@@ -21,7 +33,11 @@ const Button = (props) => {
 const App = () => {
   const [result, setResult] = useState('0');
 
-  const validMiddleWare = (value) => value.match(/^[0-9./\-*+%^]+$/) && !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\.|\.\+|\+\.|-\.|\.-|%\.|\.%|\^\.|\.\^|\*\.|\.\*|^\+|^\*|^%|^\^/) && checkDots2(value);
+  const validMiddleWare = (value) =>
+      value.match(/^[0-9./\-*+%^]+$/) &&
+      !value.match(/\+{2,}|-{2,}|%{2,}|\^{2,}|\.{2,}|\*{2,}|^\.|\.\+|\+\.|-\.|\.-|%\.|\.%|\^\.|\.\^|\*\.|\.\*|^\+|^\*|^%|^\^/) &&
+      !value.match(/[+\-%^*][+\-%^*]/) &&
+      checkNumberOfDots(value);
   const validExp = /^0[0-9]+|\+0[0-9]+|-0[0-9]+|\*0[0-9]+|%0[0-9]+|\^0[0-9]+/;
 
   const keyboardEventHandler = (event) => {
@@ -53,21 +69,8 @@ const App = () => {
     }
   }
 
-// точка есть? а если найду?!
-  const checkDots = () => {
-    let counter = 0;
-    for (let i = result.length - 1; i > -1; i--) {
-      if (result[i].match(/^[+\-%*^]$/)) {
-        break;
-      }
-      if (result[i] === '.') {
-        counter++;
-      }
-    }
-    return counter === 0;
-  }
-
-  const checkDots2 = (value) => {
+// Проверка, что нет более одной точки в числе
+  const checkNumberOfDots = (value) => {
     let counter = 0;
     for (let i = value.length - 1; i > -1 && counter < 2; i--) {
       if (value[i].match(/^[+\-%*^]$/)) {
@@ -80,7 +83,7 @@ const App = () => {
     return counter < 2;
   }
 
-// ручка вот, можешь что-нить написать
+// обработка кнопок
   const handleClick = (clickSymbol) => {
     if (!clickSymbol.match(/^[0-9]$/)) {
       switch (clickSymbol) {
@@ -88,31 +91,22 @@ const App = () => {
           setResult('0');
           break;
         case '←' :
-          if (result.length > 1)
+          if (result.length > 1) {
             setResult(result.slice(0, -1));
-          else
+          } else {
             setResult('0');
+          }
           break;
         case '=' :
-          // calc();
           evaluate(result + '=');
-          break;
-        case '.' :
-          if (result.charAt(result.length - 1).match(/^\d$/) && checkDots(result))
-            setResult(result + clickSymbol);
           break;
         case '-' :
           if (result === '0') {
-            // setResult('-');
-            evaluate('-');
+            setResult('-');
             break;
           }
+          // eslint-disable-next-line
         default :
-          // if (result.charAt(result.length - 1).match(/^\d$/)) {
-          //   setResult(result + clickSymbol);
-          // } else if (!result.charAt(result.length - 1).match(/^\.$/)) {
-          //   setResult(result.slice(0, -1) + clickSymbol);
-          // }
           evaluate(result + clickSymbol);
       }
     } else if (result === '0') {
@@ -122,14 +116,27 @@ const App = () => {
     }
   }
 
-// ну ретерн и ретерн
   return (
       <div className="container">
         <div>
-          <input id="input" type="text" value={result} autoFocus={true} tabIndex="0" onChange={(event) => evaluate(event.target.value)}  onKeyUp={keyboardEventHandler}/>
+          <input id="input"
+                 type="text"
+                 value={result}
+                 autoFocus={true}
+                 tabIndex="0"
+                 onChange={(event) => evaluate(event.target.value)}
+                 onKeyUp={keyboardEventHandler}/>
         </div>
         <div className="keypad">
-          {buttons.map((b) => <Button name={b} onClick={(e) => handleClick(e.target.name)}/>)}
+          {
+            buttons.map(
+                (b) =>
+                    <Button
+                        name={b}
+                        onClick={(e) => handleClick(e.target.name)}
+                    />
+            )
+          }
         </div>
       </div>
   );

@@ -50,19 +50,14 @@ class Node {
     switch (this.op) {
       case '+' :
         return this.left.evaluate() + this.right.evaluate();
-        break;
       case '*' :
         return this.left.evaluate() * this.right.evaluate();
-        break;
       case '%' :
         return this.left.evaluate() % this.right.evaluate();
-        break;
       case '^' :
         return Math.pow(this.left.evaluate(), this.right.evaluate());
-        break;
       case '-' :
         return this.left.evaluate() - this.right.evaluate();
-        break;
       default :
         console.log('Error : unknown operator');
     }

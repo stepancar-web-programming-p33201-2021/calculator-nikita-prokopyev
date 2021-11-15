@@ -1,37 +1,22 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./App.css";
 import Node from "./Node";
 
 // константы
 const buttons = ["clear", "←", "^", "%", "7", "8", "9", "*", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="];
 const manips = ["clear", "←", "^", "%", "*", "-", "=", "+"];
-let tabs = 1;
 
 const Button = (props) => {
-  if (manips.includes(props.name)) {
-    return (
-        <button
-            key={props.name}
-            className="highlight"
-            name={props.name}
-            onClick={props.onClick}
-            tabIndex={tabs++}
-        >
-          {props.name}
-        </button>
-    );
-  } else {
-    return (
-        <button
-            key={props.name}
-            name={props.name}
-            onClick={props.onClick}
-            tabIndex={tabs++}
-        >
-          {props.name}
-        </button>
-    );
-  }
+  return (
+      <button
+          key={props.name}
+          name={props.name}
+          onClick={props.onClick}
+          className={ manips.includes(props.name) ? 'highlight' : ""}
+      >
+        {props.name}
+      </button>
+  );
 };
 
 const App = () => {
@@ -154,7 +139,7 @@ const App = () => {
         </div>
         <div className="keypad">
           {buttons.map((b) => (
-              <Button name={b} onClick={handleSelectedSymbol} />
+              <Button name={b} onClick={handleClick}/>
           ))}
         </div>
       </div>

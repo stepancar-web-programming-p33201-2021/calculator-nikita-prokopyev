@@ -3,27 +3,7 @@ import "./App.css";
 import Node from "./Node";
 
 // константы
-const buttons = [
-  "clear",
-  "←",
-  "^",
-  "%",
-  "7",
-  "8",
-  "9",
-  "*",
-  "4",
-  "5",
-  "6",
-  "-",
-  "1",
-  "2",
-  "3",
-  "+",
-  "0",
-  ".",
-  "=",
-];
+const buttons = ["clear", "←", "^", "%", "7", "8", "9", "*", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="];
 const manips = ["clear", "←", "^", "%", "*", "-", "=", "+"];
 let tabs = 1;
 
@@ -63,6 +43,10 @@ const App = () => {
       !value.match(/[+\-%^*][+\-%^*]/) &&
       checkNumberOfDots(value);
   const validExp = /^0[0-9]+|\+0[0-9]+|-0[0-9]+|\*0[0-9]+|%0[0-9]+|\^0[0-9]+/;
+
+  const onchangeHandler = (event) => {
+    evaluate(event.target.value);
+  }
 
   const keyboardEventHandler = (event) => {
     const key = event.key;
@@ -118,10 +102,14 @@ const App = () => {
     return counter < 2;
   };
 
+  const handleClick = (event) => {
+    handleSelectedSymbol(event.target.name);
+  }
+
   // обработка кнопок
-  const handleClick = (clickSymbol) => {
-    if (!clickSymbol.match(/^[0-9]$/)) {
-      switch (clickSymbol) {
+  const handleSelectedSymbol = (selectedSymbol) => {
+    if (!selectedSymbol.match(/^[0-9]$/)) {
+      switch (selectedSymbol) {
         case "clear":
           setResult("0");
           break;
@@ -142,12 +130,12 @@ const App = () => {
           }
           // eslint-disable-next-line
         default:
-          evaluate(result + clickSymbol);
+          evaluate(result + selectedSymbol);
       }
     } else if (result === "0") {
-      setResult(clickSymbol);
+      setResult(selectedSymbol);
     } else {
-      setResult(result + clickSymbol);
+      setResult(result + selectedSymbol);
     }
   };
 
@@ -160,13 +148,13 @@ const App = () => {
               value={result}
               autoFocus={true}
               tabIndex="0"
-              onChange={(event) => evaluate(event.target.value)}
+              onChange={onchangeHandler}
               onKeyUp={keyboardEventHandler}
           />
         </div>
         <div className="keypad">
           {buttons.map((b) => (
-              <Button name={b} onClick={(e) => handleClick(e.target.name)} />
+              <Button name={b} onClick={handleSelectedSymbol} />
           ))}
         </div>
       </div>
